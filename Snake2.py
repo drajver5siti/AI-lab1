@@ -454,6 +454,8 @@ class Snake(Problem):
     def __init__(self, grid_size, initial, goal=None):
         super().__init__(initial, goal)
         self.gridSize = grid_size
+        self.totalPoints = initial[0]
+        self.points = initial[0]
 
 
     def goal_test(self, state):
@@ -477,13 +479,13 @@ class Snake(Problem):
         # state[3] -> snakePos
 
 
-        if state[4] == "SOUTH":
+        if state[2] == "SOUTH":
             # snakePos[0] -> head of snake
 
-            newHeadPos = (state[5][0][0], state[5][0][1] - 1)
             # go forwards
-            if newHeadPos[1] > 0 and newHeadPos not in state[3]:
-                snakePos = self.moveSnake(state[5], newHeadPos)
+            newHeadPos = (state[3][0][0], state[3][0][1] - 1)
+            if newHeadPos[1] >= 0 and newHeadPos not in state[3]:
+                snakePos = self.moveSnake(state[3], newHeadPos)
                 newGreenAppCount = state[0]
                 newGreenAppPos = state[1]
 
@@ -492,29 +494,29 @@ class Snake(Problem):
                     newGreenAppPos = tuple(filter(lambda x: x != newHeadPos, newGreenAppPos))
                     # grow the snake, the position of the added piece doesnt matter it will sort itself out on the next move
                     snakePos.append((0, 0))
-
+                self.points = newGreenAppCount
                 succ["ProdolzhiPravo"] = (newGreenAppCount, newGreenAppPos, "SOUTH", tuple(snakePos))
 
 
-            newHeadPos = (state[5][0][0] - 1, state[5][0][1])
             # go right
-            if newHeadPos[0] > 0 and newHeadPos not in state[3]:
-                snakePos = self.moveSnake(state[5], newHeadPos)
+            newHeadPos = (state[3][0][0] - 1, state[3][0][1])
+            if newHeadPos[0] >= 0 and newHeadPos not in state[3]:
+                snakePos = self.moveSnake(state[3], newHeadPos)
                 newGreenAppCount = state[0]
                 newGreenAppPos = state[1]
 
                 if newHeadPos in state[1]:
-                    newGreenAppCount-= 1
+                    newGreenAppCount -= 1
                     newGreenAppPos = tuple(filter(lambda x: x != newHeadPos, newGreenAppPos))
                     snakePos.append((0, 0))
-                                
+                self.points = newGreenAppCount
                 succ["SvrtiDesno"] = (newGreenAppCount, newGreenAppPos, "WEST", tuple(snakePos))
 
 
-            newHeadPos = (state[5][0][0] + 1, state[5][0][1])
             # go left
-            if newHeadPos[0] < self.gridSize - 1 and newHeadPos not in state[3]:
-                snakePos = self.moveSnake(state[5], newHeadPos)
+            newHeadPos = (state[3][0][0] + 1, state[3][0][1])
+            if newHeadPos[0] < self.gridSize  and newHeadPos not in state[3]:
+                snakePos = self.moveSnake(state[3], newHeadPos)
                 newGreenAppCount = state[0]
                 newGreenAppPos = state[1]
 
@@ -522,15 +524,15 @@ class Snake(Problem):
                     newGreenAppCount -= 1
                     newGreenAppPos = tuple(filter(lambda x: x != newHeadPos, newGreenAppPos))
                     snakePos.append((0, 0))
-
+                self.points = newGreenAppCount
                 succ["SvrtiLevo"] = (newGreenAppCount, newGreenAppPos, "EAST", tuple(snakePos))
 
 
-        elif state[4] == "NORTH":
-            newHeadPos = (state[5][0][0], state[5][0][1] + 1)
+        elif state[2] == "NORTH":
             # go forwards
-            if newHeadPos[1] < self.gridSize - 1 and newHeadPos not in state[3]:
-                snakePos = self.moveSnake(state[5], newHeadPos)            
+            newHeadPos = (state[3][0][0], state[3][0][1] + 1)
+            if newHeadPos[1] < self.gridSize and newHeadPos not in state[3]:
+                snakePos = self.moveSnake(state[3], newHeadPos)
                 newGreenAppCount = state[0]
                 newGreenAppPos = state[1]
 
@@ -538,14 +540,14 @@ class Snake(Problem):
                     newGreenAppCount -= 1
                     newGreenAppPos = tuple(filter(lambda x: x != newHeadPos, newGreenAppPos))
                     snakePos.append((0, 0))
-
+                self.points = newGreenAppCount
                 succ["ProdolzhiPravo"] = (newGreenAppCount, newGreenAppPos, "NORTH", tuple(snakePos))
 
 
-            newHeadPos = (state[5][0][0] + 1, state[5][0][1])
             # go right
-            if newHeadPos[0] < self.gridSize - 1 and newHeadPos not in state[3]:
-                snakePos = self.moveSnake(state[5], newHeadPos)
+            newHeadPos = (state[3][0][0] + 1, state[3][0][1])
+            if newHeadPos[0] < self.gridSize and newHeadPos not in state[3]:
+                snakePos = self.moveSnake(state[3], newHeadPos)
                 newGreenAppCount = state[0]
                 newGreenAppPos = state[1]
 
@@ -553,13 +555,13 @@ class Snake(Problem):
                     newGreenAppCount -= 1
                     newGreenAppPos = tuple(filter(lambda x: x != newHeadPos, newGreenAppPos))
                     snakePos.append((0, 0))
-
+                self.points = newGreenAppCount
                 succ["SvrtiDesno"] = (newGreenAppCount, newGreenAppPos, "EAST", tuple(snakePos)) 
 
 
-            newHeadPos = (state[5][0][0] - 1, state[5][0][1])
-            if newHeadPos[0] > 0 and newHeadPos not in state[3]:
-                snakePos = self.moveSnake(state[5], newHeadPos)
+            newHeadPos = (state[3][0][0] - 1, state[3][0][1])
+            if newHeadPos[0] >= 0 and newHeadPos not in state[3]:
+                snakePos = self.moveSnake(state[3], newHeadPos)
                 newGreenAppCount = state[0]
                 newGreenAppPos = state[1]
 
@@ -567,14 +569,14 @@ class Snake(Problem):
                     newGreenAppCount -= 1
                     newGreenAppPos = tuple(filter(lambda x: x != newHeadPos, newGreenAppPos))
                     snakePos.append((0, 0))
-
+                self.points = newGreenAppCount
                 succ["SvrtiLevo"] = (newGreenAppCount, newGreenAppPos, "WEST", tuple(snakePos)) 
                 
 
-        elif state[4] == "EAST":
-            newHeadPos = (state[5][0][0] + 1, state[5][0][0])
-            if newHeadPos[0] < self.gridSize - 1 and newHeadPos not in state[3]:
-                snakePos = self.moveSnake(state[5], newHeadPos)
+        elif state[2] == "EAST":
+            newHeadPos = (state[3][0][0] + 1, state[3][0][1])
+            if newHeadPos[0] < self.gridSize and newHeadPos not in state[3]:
+                snakePos = self.moveSnake(state[3], newHeadPos)
                 newGreenAppCount = state[0]
                 newGreenAppPos = state[1]
 
@@ -582,13 +584,13 @@ class Snake(Problem):
                     newGreenAppCount -= 1
                     newGreenAppPos = tuple(filter(lambda x: x != newHeadPos, newGreenAppPos))
                     snakePos.append((0, 0))
-
+                self.points = newGreenAppCount
                 succ["ProdolzhiPravo"] = (newGreenAppCount, newGreenAppPos, "EAST", tuple(snakePos)) 
 
 
-            newHeadPos = (state[5][0][0], state[5][0][0] - 1)
-            if newHeadPos[1] > 0 and newHeadPos not in state[3]:
-                snakePos = self.moveSnake(state[5], newHeadPos)
+            newHeadPos = (state[3][0][0], state[3][0][1] - 1)
+            if newHeadPos[1] >= 0 and newHeadPos not in state[3]:
+                snakePos = self.moveSnake(state[3], newHeadPos)
                 newGreenAppCount = state[0]
                 newGreenAppPos = state[1]
 
@@ -596,14 +598,13 @@ class Snake(Problem):
                     newGreenAppCount -= 1
                     newGreenAppPos = tuple(filter(lambda x: x != newHeadPos, newGreenAppPos))
                     snakePos.append((0, 0))
- 
-
+                self.points = newGreenAppCount
                 succ["SvrtiDesno"] = (newGreenAppCount, newGreenAppPos,  "SOUTH", tuple(snakePos)) 
 
 
-            newHeadPos = (state[5][0][0], state[5][0][0] + 1)
-            if newHeadPos[1] < self.gridSize - 1 and newHeadPos not in state[3]:
-                snakePos = self.moveSnake(state[5], newHeadPos)
+            newHeadPos = (state[3][0][0], state[3][0][1] + 1)
+            if newHeadPos[1] < self.gridSize and newHeadPos not in state[3]:
+                snakePos = self.moveSnake(state[3], newHeadPos)
                 newGreenAppCount = state[0]
                 newGreenAppPos = state[1]
 
@@ -611,15 +612,14 @@ class Snake(Problem):
                     newGreenAppCount -= 1
                     newGreenAppPos = tuple(filter(lambda x: x != newHeadPos, newGreenAppPos))
                     snakePos.append((0, 0))
-  
-
+                self.points = newGreenAppCount
                 succ["SvrtiLevo"] = (newGreenAppCount, newGreenAppPos, "NORTH", tuple(snakePos)) 
 
 
-        elif state[4] == "WEST":
-            newHeadPos = (state[5][0][0] - 1, state[5][0][0])
-            if newHeadPos[0] > 0 and newHeadPos not in state[3]:
-                snakePos = self.moveSnake(state[5], newHeadPos)
+        elif state[2] == "WEST":
+            newHeadPos = (state[3][0][0] - 1, state[3][0][1])
+            if newHeadPos[0] >= 0 and newHeadPos not in state[3]:
+                snakePos = self.moveSnake(state[3], newHeadPos)
                 newGreenAppCount = state[0]
                 newGreenAppPos = state[1]
 
@@ -627,14 +627,13 @@ class Snake(Problem):
                     newGreenAppCount -= 1
                     newGreenAppPos = tuple(filter(lambda x: x != newHeadPos, newGreenAppPos))
                     snakePos.append((0, 0))
-
-
+                self.points = newGreenAppCount
                 succ["ProdolzhiPravo"] = (newGreenAppCount, newGreenAppPos, "WEST", tuple(snakePos)) 
 
 
-            newHeadPos = (state[5][0][0], state[5][0][0] + 1)
-            if newHeadPos[1] < self.gridSize - 1 and newHeadPos not in state[3]:
-                snakePos = self.moveSnake(state[5], newHeadPos)
+            newHeadPos = (state[3][0][0], state[3][0][1] + 1)
+            if newHeadPos[1] < self.gridSize and newHeadPos not in state[3]:
+                snakePos = self.moveSnake(state[3], newHeadPos)
                 newGreenAppCount = state[0]
                 newGreenAppPos = state[1]
 
@@ -642,14 +641,13 @@ class Snake(Problem):
                     newGreenAppCount -= 1
                     newGreenAppPos = tuple(filter(lambda x: x != newHeadPos, newGreenAppPos))
                     snakePos.append((0, 0))
- 
-
+                self.points = newGreenAppCount
                 succ["SvrtiDesno"] = (newGreenAppCount, newGreenAppPos, "NORTH", tuple(snakePos)) 
 
 
-            newHeadPos = (state[5][0][0], state[5][0][0] - 1)
-            if newHeadPos[1] > 0 and newHeadPos not in state[3]:
-                snakePos = self.moveSnake(state[5], newHeadPos)
+            newHeadPos = (state[3][0][0], state[3][0][1] - 1)
+            if state[3][0][1] >= 0 and state[3][0] not in state[3]:
+                snakePos = self.moveSnake(state[3], newHeadPos)
                 newGreenAppCount = state[0]
                 newGreenAppPos = state[1]
 
@@ -657,8 +655,7 @@ class Snake(Problem):
                     newGreenAppCount -= 1
                     newGreenAppPos = tuple(filter(lambda x: x != newHeadPos, newGreenAppPos))
                     snakePos.append((0, 0))
-
-
+                self.points = newGreenAppCount
                 succ["SvrtiLevo"] = (newGreenAppCount, newGreenAppPos, "SOUTH", tuple(snakePos)) 
         
         return succ
@@ -667,27 +664,26 @@ class Snake(Problem):
         return self.successor(state).keys()
 
     def result(self, state, action):
-        # print(self.successor(state)[action][5][0])
-        self.state = self.successor(state)[action]
         return self.successor(state)[action]
 
-    def value(self, state):
-        pass
+    def value(self):
+        return self.totalPoints - len(self.points)
 
-    def h(self):
-        # print(self.state)
-        # val += mhd(state[3][0], state[1])
-        # for x in state[1]:
-            # val+= mhd(state[3][0], x)
-        # return val
-        pass
+    def h(self, node):
+        #node.state
+        sum = 0
+        for coord in node.state[1]:
+            sum += mhd(coord, node.state[3][0])
+        return sum
 
 def mhd(headPos, otherPos):
     return abs(headPos[0] - otherPos[0]) + abs(headPos[1] - otherPos[1])
 
 def parsePoints(point):
-    tup = (point[0], point[2])
-    return tup
+    x = int(point[0])
+    y = int(point[2])
+    ret = (x, y)
+    return ret
 
 
 if __name__ == '__main__':
@@ -702,4 +698,5 @@ if __name__ == '__main__':
 
     s = Snake(grid_size, (green_apples_count, tuple(green_apples_positions), "SOUTH", snakePos))
 
-    print(astar_search(s))
+    print(greedy_best_first_graph_search(s).solution())
+    # print(astar_search(s).solution())
